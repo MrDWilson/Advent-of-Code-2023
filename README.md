@@ -1,0 +1,1 @@
+Collection of quick solutions to the [Advent of Code](https://adventofcode.com/2023) game.
