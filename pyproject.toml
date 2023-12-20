@@ -8,7 +8,8 @@ packages = [
     { include = "1", from = "1" },
     { include = "2", from = "2" },
     { include = "3", from = "3" },
-    { include = "4", from = "4" }
+    { include = "4", from = "4" },
+    { include = "5", from = "5" }
 ]
 
 [tool.poetry.dependencies]
@@ -19,6 +20,7 @@ python = "^3.10"
 2 = "2.2:main"
 3 = "3.3:main"
 4 = "4.4:main"
+5 = "5.5:main"
 
 [build-system]
 requires = ["poetry-core"]
