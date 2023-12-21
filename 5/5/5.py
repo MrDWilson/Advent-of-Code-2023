@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, Optional
+import itertools as it
 
 def split_input(input: List[str]) -> Tuple[List[int], List[List[List[int]]]]:
     seeds: List[int] = []
@@ -41,29 +42,45 @@ def get_next_map_match(input: int, maps: List[Tuple[List[int], List[int]]]) -> i
     for map in maps:
         if input in map[0]:
             index = map[0].index(input)
-            destination = map[1][index]
-            return destination
+            return map[1][index]
         
     return input
 
 def get_end_number(input: int, all_maps: List[List[Tuple[List[int], List[int]]]]) -> int:
     current_match = input
     for maps in all_maps:
-        print(current_match)
         current_match = get_next_map_match(current_match, maps)
 
     return current_match
 
+def chunked_range(start, end, chunk_size=10000000):
+    current = start
+    while current < end:
+        next_chunk_end = min(current + chunk_size, end)
+        yield range(current, next_chunk_end)
+        current = next_chunk_end
+
 def main():
-    p = Path(__file__).with_name('test.txt')
+    p = Path(__file__).with_name('maps.txt')
     with p.open('r') as file:
         lines = file.readlines()
 
     seeds, maps = split_input(lines)
     map_ranges = [convert_map(map) for map in maps]
+    seed_locations = [get_end_number(x, map_ranges) for x in seeds]
+    lowest_seed = min(seed_locations)
 
-    for seed in seeds:
-        print("Seed " + str(seed) + ": " + str(get_end_number(seed, map_ranges)))
+    current_min_seed: Optional[int] = None
+    for seed, index in it.batched(seeds, 2):
+        for chunk in chunked_range(seed, seed + index):
+            for x in [get_end_number(x, map_ranges) for x in chunk]:
+                if current_min_seed == None:
+                    current_min_seed = x
+                elif x < current_min_seed:
+                    current_min_seed = x
+        
+    print("Part 1: " + str(lowest_seed))
+    print("Part 2: " + str(current_min_seed))
 
 if __name__ == "__main__":
     main()
