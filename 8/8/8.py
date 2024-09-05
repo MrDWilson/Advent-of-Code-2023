@@ -1,6 +1,7 @@
 from pathlib import Path
 from enum import Enum
 from typing import List, Dict, Tuple
+from math import lcm
 
 class Direction(Enum):
     Left = 0
@@ -48,15 +49,19 @@ def main():
                 break
 
     ghost_nodes = [(key, value) for key, value in nodes.items() if key.endswith("A")]
-    ghost_count: int = 0
-    for instruction in repeat_instructions(instructions):
-        ghost_count += 1
-        ghost_nodes = [process_instruction(instruction, node[1], nodes) for node in ghost_nodes]
-        if all([node[0].endswith("Z") for node in ghost_nodes]):
-            break
+    minimum_steps = []
+    for node in ghost_nodes:
+        ghost_node = node
+        steps = 0
+        for instruction in repeat_instructions(instructions):
+            ghost_node = process_instruction(instruction, ghost_node[1], nodes)
+            steps += 1
+            if ghost_node[0].endswith("Z"):
+                minimum_steps.append(steps)
+                break
 
     print("Part 1: " + str(count))
-    print("Part 2: " + str(ghost_count))
+    print("Part 2: " + str(lcm(*minimum_steps)))
 
 if __name__ == '__main__':
     main()

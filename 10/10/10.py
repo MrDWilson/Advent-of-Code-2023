@@ -59,7 +59,7 @@ def get_connected(matrix, position) -> Tuple[Tuple[int, int], Tuple[int, int]]:
     return (matches[0], matches[1])
 
 def main():
-    p = Path(__file__).with_name('input.txt')
+    p = Path(__file__).with_name('test.txt')
     with p.open('r') as file:
         lines = file.readlines()
 
@@ -98,6 +98,9 @@ def main():
         current_step = next_step
         distance += 1
         distances[current_step].append(distance)
+
+    pipes = [key for key, _ in distances.items()]
+    print(pipes)
 
     del distances[start_position]
 
